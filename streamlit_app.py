@@ -22,15 +22,6 @@ st.altair_chart(line_chart, use_container_width=True)
 st.dataframe(df.groupby("Category").sum())
 # Using as_index=False here preserves the Category as a column.  If we exclude that, Category would become the datafram index and we would need to use x=None to tell bar_chart to use the index
 st.bar_chart(df.groupby("Category", as_index=False).sum(), x="Category", y="Sales", color="#04f")
-total_sales = filtered_data['Sales'].sum()
-total_profit = filtered_data['Profit'].sum()
-overall_profit_margin = (total_profit / total_sales * 100) if total_sales > 0 else 0
-
-st.metric("Total Sales", total_sales)
-st.metric("Total Profit", total_profit)
-st.metric("Overall Profit Margin (%)", overall_profit_margin)
-
-
 
 
 
