@@ -8,18 +8,31 @@ st.title("Data App Assignment, on Oct 7th")
 st.write("### Input Data and Examples")
 df = pd.read_csv("Superstore_Sales_utf8.csv", parse_dates=True)
 st.dataframe(df)
+sub_categories = df[df['Category'] == category]['Sub_Category'].unique()
+selected_sub_categories = st.multiselect("Select Sub Category", sub_categories)
 
 # This bar chart will not have solid bars--but lines--because the detail data is being graphed independently
 st.bar_chart(df, x="Category", y="Sales")
 category = st.selectbox("Select Category", df['Category'].unique())
-sub_categories = df[df['Category'] == category]['Sub_Category'].unique()
-selected_sub_categories = st.multiselect("Select Sub Category", sub_categories)
+line_chart = alt.Chart(filtered_data).mark_line().encode(x='Sub_Category', y='Sales').interactive()
+st.altair_chart(line_chart, use_container_width=True)
 
 
 # Now let's do the same graph where we do the aggregation first in Pandas... (this results in a chart with solid bars)
 st.dataframe(df.groupby("Category").sum())
 # Using as_index=False here preserves the Category as a column.  If we exclude that, Category would become the datafram index and we would need to use x=None to tell bar_chart to use the index
 st.bar_chart(df.groupby("Category", as_index=False).sum(), x="Category", y="Sales", color="#04f")
+total_sales = filtered_data['Sales'].sum()
+total_profit = filtered_data['Profit'].sum()
+overall_profit_margin = (total_profit / total_sales * 100) if total_sales > 0 else 0
+
+st.metric("Total Sales", total_sales)
+st.metric("Total Profit", total_profit)
+st.metric("Overall Profit Margin (%)", overall_profit_margin)
+
+
+
+
 
 # Aggregating by time
 # Here we ensure Order_Date is in datetime format, then set is as an index to our dataframe
