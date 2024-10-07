@@ -11,6 +11,10 @@ st.dataframe(df)
 
 # This bar chart will not have solid bars--but lines--because the detail data is being graphed independently
 st.bar_chart(df, x="Category", y="Sales")
+category = st.selectbox("Select Category", df['Category'].unique())
+sub_categories = df[df['Category'] == category]['Sub_Category'].unique()
+selected_sub_categories = st.multiselect("Select Sub Category", sub_categories)
+
 
 # Now let's do the same graph where we do the aggregation first in Pandas... (this results in a chart with solid bars)
 st.dataframe(df.groupby("Category").sum())
